@@ -1,0 +1,27 @@
+'''
+匿名函数
+'''
+
+# 万物皆对象
+# 对象就会有内存地址，就会有一个引用
+# 通过这个引用就可以找到该对象并使用它
+
+def show():
+    print('Hello Python')
+
+show()
+
+# 将一个函数的引用赋值给另外一个变量，函数不要加括号，加括号表示调用函数，是将函数结果赋值
+func = show
+print(func)
+print(show)
+func()
+
+def display():
+    print('Display run')
+# 实现一个可以调用另外一个函数的函数
+def call_function(func):
+    func()
+
+call_function(show)
+call_function(display)
