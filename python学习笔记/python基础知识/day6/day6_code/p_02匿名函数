@@ -1,0 +1,25 @@
+'''
+匿名函数
+'''
+
+# 定义一个匿名函数
+func = lambda : 1 + 1
+print(func)
+print(func())
+
+func = lambda x: print(x ** 10)
+func(2)
+
+# lambda 定义时的注意事项
+# 1.lambda 默认返回表达式计算结果，不需要return，如果加了return反而报错
+# func = lambda x, y : return x + y SyntaxError: invalid syntax
+
+# 2.不能使用循环
+# func = lambda x, y: for i in range(x,y) : print(i) SyntaxError: invalid syntax
+
+# 3.不能使用if的正常格式
+# func = lambda n: if n % 2 == 0 : print('偶数') SyntaxError: invalid syntax
+
+# 4.但是可以使用if实现的三目运算符
+func = lambda m, n: m if m > n else n
+print(func(11, 2))
