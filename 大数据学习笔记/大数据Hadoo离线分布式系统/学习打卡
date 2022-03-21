@@ -1,3 +1,4 @@
 # 2022-01-06 学完大数据基础及硬件介绍，搭建了三台虚拟机，处理了联网、时间同步、ssh免密登录等问题，安装mysql时遇到了国外下载不了，国内源缺文件的问题，最后通过清华源解决问题。
              具体操作参考及问题解答地址：1.https://mirror.tuna.tsinghua.edu.cn/help/centos-vault/
                                         2.https://blog.csdn.net/weixin_52895466/article/details/113561244
+# 2022-03-21 学到了HDFS的高级命令
