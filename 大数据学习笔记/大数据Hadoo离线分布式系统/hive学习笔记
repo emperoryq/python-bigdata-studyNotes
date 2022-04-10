@@ -19,3 +19,4 @@
   ②多分区表加载数据load data local inpath '/export/servers/hivedatas/score.csv' into table score2 partition(year='2018',month='06',day='01');
    hdfs存储形式：/user/hive/warehouse/myhive.db/score2/year=2018/month=06/day=01
    即多分区：目录的嵌套
+5.查看分区：show partitions score;
