@@ -1,0 +1,21 @@
+#hive 元数据存储 mysql
+查看mysql服务是否开启：service  mysqld  status
+启动mysql：service  mysqld  start
+如何进入mysql服务器：
+	mysql -u root -p
+关闭mysql：service  mysqld  stop
+可用SQLyog连接虚拟机的mysql服务器
+
+#hive相关笔记
+1.hive 执行一次insert into就会在hdfs存为一个文件
+2.drop table （内部表）是将表文件移动到了hdfs://node01:8020/user/root/.Trash/Current回收站里面
+   删除外部表，只会删除元数据，真实数据不会被删除，即hdfs文件数据并不会被删除，目录也还在。重新创建该外部
+   表以后，就能再查询出之前的数据。
+3.hive加载数据：①hdfs dfs -put 文件名 路劲（表文件路劲）
+                          ②insert into/overwrite
+                          ③load data local inpath '/export/servers/hivedatas/student.csv' into table student;
+                          ④load data inpath ...;剪切操作，原路径的文件会剪切到/user/hive...
+4.①分区表创建以后，partition(month=201806)，会在hdfs文件夹（/user/hive/warehouse/myhive.db/score/month=201806）里面创建一个month=201806的文件夹，文件夹下面存放该分区的数据。
+  ②多分区表加载数据load data local inpath '/export/servers/hivedatas/score.csv' into table score2 partition(year='2018',month='06',day='01');
+   hdfs存储形式：/user/hive/warehouse/myhive.db/score2/year=2018/month=06/day=01
+   即多分区：目录的嵌套
