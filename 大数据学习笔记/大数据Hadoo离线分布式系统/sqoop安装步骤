@@ -1,0 +1,10 @@
+# sqoop安装步骤
+1.将sqoop安装包上传到有hadoop\hive\mysql环境的机器上
+2.解压sqoop安装包
+3.进入conf文件夹，并将sqoop-env-tel.sh 修改为sqoop-env.sh：mv sqoop-env-template.sh sqoop-env.sh
+4.修改sqoop-env.sh文件:
+        export HADOOP_COMMON_HOME= /export/servers/hadoop-2.7.5
+        export HADOOP_MAPRED_HOME= /export/servers/hadoop-2.7.5
+        export HIVE_HOME= /export/servers/hive
+5.加入 mysql 的 jdbc 驱动包:cp /hive/lib/mysql-connector-java-5.1.xx.jar $SQOOP_HOME/lib/
+6.验证启动
