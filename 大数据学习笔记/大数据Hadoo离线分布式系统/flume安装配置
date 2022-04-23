@@ -1,0 +1,6 @@
+1.解压flume包：tar zxvf apache-flume-1.8.0-bin.tar.gz -C /export/servers/
+2.改名：mv apache-flume-1.8.0-bin/ flume
+3.修改conf目录下的flume-env.sh.template 文件：mv flume-env.sh.template flume-env.sh
+4.配置flume-env.sh文件：vim flume-env.sh
+5.修改java路径：export JAVA_HOME=/export/servers/jdk1.8.0_141
+6.修改执行权限：chmod a+x flume-env.sh
