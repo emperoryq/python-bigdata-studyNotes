@@ -1,0 +1,17 @@
+# 安装部署
+  单节点部署模式 注意时区 内存检测关闭
+1.重新编译安装包
+2.解压安装包
+3.vim conf/azkaban.properties
+  default.timezone.id=Asia/Shanghai #修改时区
+4.vim plugins/jobtypes/commonprivate.properties
+  添加：memCheck.enabled=false
+  azkaban 默认需要 3G 的内存，剩余内存不足则会报异常
+5.cd azkaban-solo-server-0.1.0-SNAPSHOT/
+  bin/start-solo.sh
+6.http://node03:8081/ 默认用户名密码 azkaban
+7.编写job的配置文件
+8.把所有job配置打包成一个zip压缩包
+9.登录http://node03:8081/创建工程
+10.上传zip压缩包
+11.选择调度schdule或者立即执行executor工程
