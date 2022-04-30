@@ -1,0 +1,81 @@
+1.节点规划：
+  node03 : mysql
+  node02 : web-server和exec-server不同进程
+2.mysql配置初始化：
+  node03:
+  mkdir /export/servers/azkaban
+  tar -zxvf azkaban-db-0.1.0-SNAPSHOT.tar.gz –C /export/servers/azkaban/
+  Mysql 上创建对应的库、增加权限、创建表
+  mysql> CREATE DATABASE azkaban_two_server; #创建数据库
+  mysql> use azkaban_two_server;
+  mysql> source /export/servers/azkaban/azkaban-db-0.1.0-SNAPSHOT/createall-sql-0.1.0-SNAPSHOT.sql; #加载初始化 sql 创建表
+3.web-server 服务器配置:
+  node02:
+  mkdir /export/servers/azkaban
+  tar -zxvf azkaban-web-server-0.1.0-SNAPSHOT.tar.gz –C /export/servers/azkaban/
+  tar -zxvf azkaban-exec-server-0.1.0-SNAPSHOT.tar.gz –C /export/servers/azkaban/
+  生成 ssl 证书：
+   keytool -keystore keystore -alias jetty -genkey -keyalg RSA
+  将在当前目录生成 keystore 证书文件,将 keystore 拷贝到 azkaban web 服务器根目录中。
+  cp keystore azkaban-web-server-0.1.0-SNAPSHOT/
+  配置 conf/azkaban.properties：
+  default.timezone.id=Asia/Shanghai # 时区注意后面不要有空格
+  # Azkaban Jetty server properties. 开启使用 ssl 并且知道端口
+  jetty.use.ssl=true
+  jetty.ssl.port=8443
+  # Azkaban Executor settings 指定本机 Executor 的运行端口
+  executor.host=localhost
+  executor.port=12321
+  # KeyStore for SSL ssl 相关配置 注意密码和证书路径
+  jetty.keystore=keystore
+  jetty.password=123456
+  jetty.keypassword=123456
+  jetty.truststore=keystore
+  jetty.trustpassword=123456
+
+  # Azkaban mysql settings by default. Users should configure their own username and password.
+  database.type=mysql
+  mysql.port=3306
+  mysql.host=node03
+  mysql.database=***
+  mysql.user=***
+  mysql.password=***
+  mysql.numconnections=100
+  
+  #Multiple Executor 设置为 false
+  azkaban.use.multiple.executors=true
+  #azkaban.executorselector.filters=StaticRemainingFlowSize,MinimumFreeMemory,CpuStatus
+  azkaban.executorselector.comparator.NumberOfAssignedFlowComparator=1
+  azkaban.executorselector.comparator.Memory=1
+  azkaban.executorselector.comparator.LastDispatched=1
+  azkaban.executorselector.comparator.CpuUsage=1
+4.添加 azkaban.native.lib=false 和 execute.as.user=false 属性：
+  mkdir -p plugins/jobtypes
+  vim commonprivate.properties
+  azkaban.native.lib=false
+  execute.as.user=false
+  memCheck.enabled=false
+5.exec-server 服务器配置
+  default.timezone.id=Asia/Shanghai
+  # Where the Azkaban web server is located
+  azkaban.webserver.url=https://node02:8443
+  # Azkaban mysql settings by default. Users should configure their own username and password.
+  database.type=mysql
+  mysql.port=3306
+  mysql.host=node03
+  mysql.database=***
+  mysql.user=***
+  mysql.password=***
+  mysql.numconnections=100
+  # Azkaban Executor settings
+  executor.maxThreads=50
+  executor.port=12321
+  executor.flow.threads=30
+6.集群启动:
+  先启动 exec-server 
+  再启动 web-server
+  启动 webServer 之后进程失败消失，可通过安装包根目录下对应启动日志进行排查。
+  需要手动激活 executor
+  curl -G "node02:$(<./executor.port)/executor?action=activate" && echo
+  cd /export/servers/azkaban/azkaban-exec-server-0.1.0-SNAPSHOT
+  然后重新启动 webServer 就可以了。
