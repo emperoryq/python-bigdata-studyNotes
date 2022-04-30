@@ -1,0 +1,12 @@
+# multiple-executor 模式是多个 executor Server 分布在不同服务器上，只需要将 azkaban-exec-server 安装包拷贝到不同机器上即可组成分布式。
+# 直接在two_server的基础上，在node01这台机器上布置一个executor
+1.节点规划：
+  node01:executor
+  node02:executor、web-server
+  node03:mysql
+2.将executor在node02上的文件夹scp -r 到node01
+3.启动node02，node01的executor和web-server
+注意：executor启动（包括重启）的时候，默认不会激活，需要自己手动激活
+对应的mysql中的表executors active:0表示未激活 1表示激活
+可以自己手动修改数据提交激活，也可以使用官方的命令请求激活
+激活命令：curl -G "node01:$(<./executor.port)/executor?action=activate" && echo
