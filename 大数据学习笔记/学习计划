@@ -8,10 +8,10 @@ JaveWeb
   1.Redis高级 2.微服务-SpringBoot微服务快速开发 3.消息中间件-RabbitMQ 4.微服务-SpringCloud 5.应用容器-Docker 6.搜索引擎-ElasticSearch
 大数据基础增强
   1.Libux实战 2.JVM优化
-大数据Hadoop离线分布式系统：（目前已经学习到sqoop）
+大数据Hadoop离线分布式系统：
   1.Linux环境搭建 2.jdk+mysql安装 3.Zookeeper组件 4.HDFS组件 5.MapReduce组件 6.Yarn组件 7.Hive组件 8.Impala组件 
   9.1.Sqoop 9.2.Flume 9.3.azkaban 9.4.Oozie 9.5.Hue 10.项目实战—网站流量日志分析
-大数据 NoSQL、Kafka和ELK技术实战：（2022.01.01-2022.01.08）
+大数据 NoSQL、Kafka和ELK技术实战：
   1.redis组件 2.hbase组件 3.kafka组件 4.ELK技术栈
 大数据Spark内存计算系统：
   1.scala语言 2.spark入门以及集群搭建 3.spark_rdd算子 4.spark原理_运用过程_高级特性 5.sparksql 6.sparkstreaming原理_运用过程_高级特性 7.StructuredStreaming_介绍_案例 
