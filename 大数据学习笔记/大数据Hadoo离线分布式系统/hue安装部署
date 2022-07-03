@@ -31,3 +31,4 @@
   build/env/bin/supervisor
   --如果报没有user，可先在/export/servers/hue-3.9.0-cdh5.14.0/执行useradd hue;
   http://node03:8888/
+  root:roothue
