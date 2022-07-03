@@ -1,0 +1,33 @@
+1、cd /export/softwares/  然后tar -zxvf hue-3.9.0-cdh5.14.0.tar.gz -C /export/server/
+2、联网安装各种必须的依赖包：
+    yum install -y asciidoc cyrus-sasl-devel cyrus-sasl-gssapi cyrus-sasl-plain gcc gcc-c++ krb5-devel libffi-devel libxml2-devel libxslt-devel make openldap-devel python-devel sqlite-devel gmp-devel
+3、cd /export/servers/hue-3.9.0-cdh5.14.0/desktop/conf
+   vim hue.ini
+   ------------------
+   [desktop]
+  secret_key=jFE93j;2[290-eiw.KEiwN2s3['d;/.q[eIW^y#e=+Iei*@Mn<qW5o
+  http_host=node-1
+  is_hue_4=true
+  time_zone=Asia/Shanghai
+  server_user=root
+  server_group=root
+  default_user=root
+  default_hdfs_superuser=root
+  #配置使用 mysql 作为 hue 的存储数据库,大概在 hue.ini 的 587 行左右
+  [[database]]
+  engine=mysql
+  host=node03
+  port=3306
+  user=root
+  password=*********（mysql的密码）
+  name=hue
+4、创建 mysql 中 Hue 使用的 DB
+  create database hue default character set utf8 default collate utf8_general_ci;
+5、编译Hue
+  cd /export/servers/hue-3.9.0-cdh5.14.0
+  make apps
+6、启动 Hue、Web UI 访问
+  cd /export/servers/hue-3.9.0-cdh5.14.0/
+  build/env/bin/supervisor
+  --如果报没有user，可先在/export/servers/hue-3.9.0-cdh5.14.0/执行useradd hue;
+  http://node03:8888/
