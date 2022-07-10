@@ -45,6 +45,11 @@
    cd /export/servers/hue-3.9.0-cdh5.14.0/
    build/env/bin/supervisor
    
+   注：hive的使用，要保证/tmp/hive权限足够，不然要报错，导致hive在linux和hue上均不能使用
+    Exception in thread "main" java.lang.RuntimeException: The root scratch dir: /tmp/hive on HDFS should be writable. Current permissions are: rwxrwx---
+   目前处理方式：hdfs dfs -chmod -R 777 /tmp
+   处理以后，可以正常使用hive了
+   
 ---------------------------------------------------
 #hue集成hbase
 1、修改hue.ini
