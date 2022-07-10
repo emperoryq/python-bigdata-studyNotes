@@ -1,0 +1,78 @@
+#hue集成HDFS、yarn
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------
+#hue 集成hive
+1、如果需要配置 hue 与 hive 的集成，我们需要启动 hive 的 metastore 服务以及 hiveserver2 服务
+
+2、修改hue.ini
+  [beeswax]
+ hive_server_host=node03
+ hive_server_port=10000
+ hive_conf_dir=/export/servers/apache-hive-2.1.1-bin/conf
+ server_conn_timeout=120
+ auth_username=root
+ auth_password=********（服务器密码）
+[metastore]
+ #允许使用 hive 创建数据库表等操作
+ enable_new_create_table=true
+
+3、启动 Hive 服务、重启 hue
+  启动hive
+  cd /export/servers/apache-hive-2.1.1-bin/
+  nohup bin/hive --service metastore &
+  nohup bin/hive --service hiveserver2 &
+  启动hue
+  cd /export/servers/hue-3.9.0-cdh5.14.0/
+  build/env/bin/supervisor
+
+----------------------------------------------------
+#hue集成mysql
+1、修改hue.ini
+  [[[mysql]]]
+ nice_name="My SQL DB"
+ engine=mysql
+ host=node-1
+ port=3306
+ user=root
+ password=********(mysql密码)
+
+2、重启 hue
+   cd /export/servers/hue-3.9.0-cdh5.14.0/
+   build/env/bin/supervisor
+   
+---------------------------------------------------
+#hue集成hbase
+1、修改hue.ini
+  [hbase]
+  hbase_clusters=(Cluster|node01:9090)
+  hbase_conf_dir=/export/servers/hbase-2.0.0/conf
+
+2、启动hbase的thrift server服务
+  node01:
+  cd /export/servers/hbase-2.0.0
+  bin/hbase-daemon.sh start thrift
+  
+3、启动hue
+  node03:
+  cd /export/servers/hue-3.9.0-cdh5.14.0/
+  build/env/bin/supervisor
+
+注：重启hue的时候，可能会存在ctrl+c停止不了服务的情况
+    使用 ps -ef | grep hue 命令可以查看hue的进程号
+    使用kill -9 <进程号> 强制杀死进程
+
+
+
+
+
+
+
+
+
+
+
