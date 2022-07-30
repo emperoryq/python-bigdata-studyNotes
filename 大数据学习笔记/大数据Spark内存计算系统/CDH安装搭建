@@ -4,4 +4,45 @@ CDH安装搭建
 3、创建本地yum仓库<重点>
   1、下载CDH安装包
     a、下载CDH的安装包需要使用CDH的一个工具，要安装CDH这个工具就要先导入CDH的yum源
-    wget
+    wget https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5.repo
+    mv cloudera-cdh5.repo /etc/yum.repos.d/
+    注意：目前cloudera全部要订阅收费，已经不能再使用这个wget获得这个repo了
+    解决方案：自己在/etc/yum.repos.d建一个cloudera-cdh5.repo文件，手动输入内容：
+      [cloudera-manager]
+
+      name = Cloudera Manager, Version 5.15.0
+
+      baseurl = http://ro-bucharest-repo.bigstepcloud.com/cloudera-repos/cdh5/redhat/6/x86_64/cdh/5/
+
+      gpgkey = http://ro-bucharest-repo.bigstepcloud.com/cloudera-repos/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
+
+      gpgcheck = 1
+   该方案亲测有效，查半天资料整出来的
+   b、安装CDH 安装包同步工具
+    yum install -y yum-utils createrepo
+   c、同步 CDH 的安装包
+    reposync -r cloudera-cdh5
+ 2、创建本地 Yum 仓库服务器
+    创建本地 Yum 仓库的原理是将 CDH 的安装包下载下来, 提供 Http 服务给局域网其它主机(或本机), 
+    让其它主机的 Yum 能够通过 Http 服务下载 CDH 的安装包, 所以需要提供 Http 服务, 让本机或者其它节点
+    可以通过 Http 下载文件, Yum 本质也就是帮助我们从 Yum 的软件仓库下载软件
+   a、安装 Http 服务器软件
+      yum install -y httpd
+      service httpd start
+      (由于阿里云有两个IP，会导致指向不明，所以阿里云服务器使用私有IP)
+   b、创建 Yum 仓库的 Http 目录
+    mkdir -p /var/www/html/cdh/5
+    cp -r cloudera-cdh5/RPMS /var/www/html/cdh/5/
+    cd /var/www/html/cdh/5
+    执行：createrepo .
+   c、在三台主机上配置 Yum 源
+    最后一步便是向 Yum 增加一个新的源, 指向我们在 cdh01 上创建的 Yum 仓库, 但是在这个环节的第一步中, 已经下载了一个 Yum 的源, 只需要修改这个源的文件, 把 URL 替换为 cdh01 的地址即可
+    所以在 cdh01 上修改文件 /etc/yum.repos.d/cloudera-cdh5.repo 为
+    baseurl=http://node01/cdh/5/(阿里云服务器使用私有IP)
+    在 node02 和 node03 上下载这个文件
+      wget https://archive.cloudera.com/cdh5/redhat/7/x86_64/cdh/cloudera-cdh5.repo
+      mv cloudera-cdh5.repo /etc/yum.repos.d/
+    然后在 cdh02 和 cdh03 上修改文件 /etc/yum.repos.d/cloudera-cdh5.repo
+    baseurl=http://cdh01/cdh/5/
+    注：由于wget不能下载到这个文件，在/etc/yum.repos.d目录下
+    使用scp /etc/yum.repos.d/cloudera-cdh5.repo root@node02:$PWD;scp /etc/yum.repos.d/cloudera-cdh5.repo root@node03:$PWD;
