@@ -1,0 +1,7 @@
+CDH安装搭建
+1、安装centos
+2、安装jdk
+3、创建本地yum仓库<重点>
+  1、下载CDH安装包
+    a、下载CDH的安装包需要使用CDH的一个工具，要安装CDH这个工具就要先导入CDH的yum源
+    wget
